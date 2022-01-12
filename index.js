@@ -1,11 +1,13 @@
-let canvas =  document.getElementById("canvas1");
+let canvas =  document.querySelector("#canvas1");
 let ctx = canvas.getContext('2d');
-// canvas.width = 1600;  //2800
-// canvas.height = 800;  //1400
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-
+canvas.width = 1600;  //2800
+canvas.height = 800;  //1400
+// canvas.width = window.innerWidth;
+// canvas.height = window.innerHeight;
+// canvas.width = document.body.clientWidth;
+// canvas.height = document.body.clientHeight;
+// canvas.style.width = window.innerWidth + "px";
+// canvas.style.height = window.innerHeight + "px";
 
 
 // window.addEventListener('resize', function(){
