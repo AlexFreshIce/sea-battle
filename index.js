@@ -1,44 +1,31 @@
-let canvas =  document.getElementById("canvas");
+let canvas =  document.getElementById("canvas1");
 let ctx = canvas.getContext('2d');
+// canvas.width = 1600;  //2800
+// canvas.height = 800;  //1400
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-canvas.width = 1600;
-canvas.height = 800;
+// window.addEventListener('resize', function(){
+//   canvasPosition = canvas.getBoundingClientRect();
+//   pointer.x = canvas.width/2;
+//   pointer.y = canvas.height/2;
+// });
 
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;}
 
-// const rect = canvas.getBoundingClientRect()
 // document.addEventListener("click", (event)=>{
-//   console.log(`x = ${event.clientX-rect.left} 
-//                y = ${event.clientY-rect.top}` )})
+//   console.log(`x = ${event.clientX-canvasPosition.left} 
+//                y = ${event.clientY-canvasPosition.top}` )})
 
-  
-
-
-
-
+const canvasPosition = canvas.getBoundingClientRect()
 let battlCell = 10;
 let battlCellMin = 10;
-let battlCellMax = 28;
+let battlCellMax = 29;
 let battlCellSize = 32;
 let battlSize = battlCell*battlCellSize;
-let battlegroundPosition1 = {
-  x:canvas.width/2 - 128 - battlSize,
-  y:battlCellSize*2,
-}
-let battlegroundPosition2 = {
-  x:canvas.width/2 + 128,
-  y:battlCellSize*2
-}
-let shipDockPosition1 = {
-  x:canvas.width/2 - 128 - battlSize,
-  y:battlCellSize*2 + battlSize + battlCellSize*2,
-}
-let shipDockPosition2 = {
-  x:canvas.width/2 + 128,
-  y:battlCellSize*2 + battlSize + battlCellSize*2,
-}
+
+let fontSize = battlCellSize + 'px';
+ctx.font = `${fontSize} 'Caveat'`;
+
 const ships = {
   ships1:4,
   ships2:3,
@@ -46,10 +33,25 @@ const ships = {
   ships4:1,
 }
 
+const battlegroundPosition1 = {
+  x:canvas.width/2 - 128 - battlSize,
+  y:battlCellSize*2,
+}
+const battlegroundPosition2 = {
+  x:canvas.width/2 + 128,
+  y:battlCellSize*2
+}
+const shipDockPosition1 = {
+  x:canvas.width/2 - 128 - battlSize,
+  y:battlCellSize*2 + battlSize + battlCellSize*2,
+}
+const shipDockPosition2 = {
+  x:canvas.width/2 + 128,
+  y:battlCellSize*2 + battlSize + battlCellSize*2,
+}
 
-let fontSize = battlCellSize - battlCellSize/4 + 'px';
 
-
+//Background
 function createBackgroundPattern (){
   const patternCanvas = document.createElement('canvas');
   const patternContext = patternCanvas.getContext('2d');
@@ -67,6 +69,189 @@ function createBackgroundPattern (){
 const pattern = ctx.createPattern(createBackgroundPattern (), 'repeat');
 ctx.fillStyle = pattern;
 ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+
+
+
+// Pointer
+const pointer = 
+{ x:canvas.width/2,
+  y:canvas.height/2,
+  left:false,
+  pLeft:false,
+  right:false,
+  pRight:false,
+  takeObject:{},
+  over: false,
+}
+
+
+
+
+// canvas.addEventListener("pointerenter", enterHandler);
+// canvas.addEventListener("pointerleave", leaveHandler);
+
+// function enterHandler(event) {
+//   pointer.over = true;
+// }
+
+// function leaveHandler(event) {
+//   pointer.over = false;
+// }
+
+
+
+
+canvas.addEventListener("pointermove", moveHandler);
+canvas.addEventListener("pointerdown", downHandler);
+canvas.addEventListener("pointerup", upHandler);
+document.addEventListener('keydown', function(){
+  pointer.takeObjectHorizontal = !pointer.takeObjectHorizontal;
+
+});
+document.addEventListener('contextmenu', function(){
+  pointer.takeObjectHorizontal = !pointer.takeObjectHorizontal;
+});
+
+
+
+function moveHandler(event){
+  pointer.x = event.clientX-canvasPosition.left;
+  pointer.y = event.clientY-canvasPosition.top;
+}
+
+function downHandler(event){
+  if (event.button === 0) {
+    pointer.left = true;
+  } 
+  if (event.button === 2) {
+    pointer.right = true;
+  }
+}
+
+function upHandler(event){
+  if (event.button === 0) {
+    pointer.left = false;
+  } 
+  if (event.button === 2) {
+    pointer.right = false;
+  }
+  
+}
+
+function pointerPreviouslyClick() {
+  pointer.pLeft = pointer.left;
+  pointer.pRight = pointer.right;
+}
+
+
+// Drag'n'Drop
+function takeObj (Player){ 
+  //Take Obj on ship dock
+  if (pointer.left && !pointer.pLeft){
+  let {shipDock} = Player;
+  let shipDockKey = Object.keys(shipDock)
+  for (i = 0; i<shipDockKey.length; i++){
+      if ( (shipDock[shipDockKey[i]].position.sX <= pointer.x) 
+            && (shipDock[shipDockKey[i]].position.sX + battlCellSize*(i+1) >= pointer.x)
+            && (shipDock[shipDockKey[i]].position.sY <= pointer.y)
+            && (shipDock[shipDockKey[i]].position.sY + battlCellSize*(i+1) >= pointer.y)){
+                pointer.takeObject=shipDock[shipDockKey[i]];
+                pointer.takeObjectHorizontal = true;
+        }
+        
+      }
+      console.log(pointer.takeObject)  
+      console.log(pointer.takeObjectHorizontal)  
+    }
+    // if (pointer.right && !pointer.pRight){
+    //   pointer.takeObjectHorizontal = !pointer.takeObjectHorizontal
+    //   console.log(pointer.takeObjectHorizontal)  
+    // }
+    if (!pointer.left && !pointer.pLeft){
+    pointer.takeObject={}
+    }
+}
+
+  function dragObj (){
+  if (Object.keys(pointer.takeObject).length != 0){
+    ctx.beginPath();
+    ctx.strokeStyle = "rgba(40, 46, 250, 1)";
+    ctx.lineWidth = 4; 
+    if (pointer.takeObjectHorizontal){
+      ctx.rect(pointer.x-battlCellSize*pointer.takeObject.size/2, 
+      pointer.y-battlCellSize/2, 
+      battlCellSize*pointer.takeObject.size, 
+      battlCellSize);}
+    else {
+      ctx.rect(pointer.x-battlCellSize/2, 
+      pointer.y-battlCellSize*pointer.takeObject.size/2, 
+      battlCellSize, 
+      battlCellSize*pointer.takeObject.size);
+    }  
+    
+    ctx.stroke(); 
+  }
+}
+
+
+
+ 
+
+
+
+// function takeObjHandler(event){
+//   let mX = event.clientX-canvasPosition.left;
+//   let mY = event.clientY-canvasPosition.top;
+//   let {shipDock} = Player1;
+//   let shipDockKey = Object.keys(shipDock)
+//   for (i = 0; i<shipDockKey.length; i++){
+//       if ( (shipDock[shipDockKey[i]].position.sX <= mX) 
+//             && (shipDock[shipDockKey[i]].position.sX + battlCellSize*(i+1) >= mX)
+//             && (shipDock[shipDockKey[i]].position.sY <= mY)
+//             && (shipDock[shipDockKey[i]].position.sY + battlCellSize*(i+1) >= mY)){
+//                 pointer.takeObject=shipDock[shipDockKey[i]]
+//         }
+//       } 
+//       console.log(pointer.takeObject)  
+//  }
+
+
+
+
+
+
+
+// function takeObjHandler(event){
+//   let mX = event.clientX-canvasPosition.left;
+//   let mY = event.clientY-canvasPosition.top;
+//   let {shipDock} = Player1;
+//   let shipDockKey = Object.keys(shipDock)
+//   for (i = 0; i<shipDockKey.length; i++){
+//       if ( (shipDock[shipDockKey[i]].position.sX <= mX) 
+//             && (shipDock[shipDockKey[i]].position.sX + battlCellSize*(i+1) >= mX)
+//             && (shipDock[shipDockKey[i]].position.sY <= mY)
+//             && (shipDock[shipDockKey[i]].position.sY + battlCellSize*(i+1) >= mY)){
+//                 pointer.takeObject=shipDock[shipDockKey[i]]
+//         }
+//       }
+//   console.log(pointer.takeObject)  
+//  }
+
+
+//  function moveObjHandler(event){
+//   if (Object.keys(pointer.takeObject).length != 0){
+//     pointer.x = event.clientX-canvasPosition.left;
+//     pointer.y = event.clientY-canvasPosition.top;
+//     console.log(pointer)
+//   }
+//  }
+
+
+
+
+
+
 
 
 
@@ -89,11 +274,7 @@ return battleground
 }
 
 
-
-
 function drawBattleground(Player){
-       
-      
   for (let y = 0; y<battlCell; y++){
     for (let x = 0; x<battlCell; x++){
       let cX = x * (battlCellSize) + Player.battlegroundPosition.x;
@@ -113,7 +294,7 @@ function drawBattleground(Player){
     }
   }
  
-  ctx.font = `${fontSize} serif`;
+  
   ctx.fillStyle = "rgba(6, 25, 247, 1)";
   let letterX = Player.battlegroundPosition.x + battlCellSize/4;
   let letterY = Player.battlegroundPosition.y - battlCellSize + battlCellSize/2 ;
@@ -125,7 +306,7 @@ function drawBattleground(Player){
    }
   for (j = 1; j<= battlCell; j++ ){
     let bigNamberX = numberX 
-    if (j>=10)(bigNamberX = bigNamberX - battlCellSize/4)
+    if (j>=10)(bigNamberX = bigNamberX - battlCellSize/2)
     ctx.fillText(j, bigNamberX , numberY+ battlCellSize*j)
   }
   ctx.beginPath();
@@ -141,26 +322,34 @@ function drawBattleground(Player){
 function makeShipDock(){
   const shipDock = {};
   shipDock.ships1= {
+    name:"ships1",
     numberOf: ships.ships1,
-    position: {sX:0, sY:0}
+    size:1,
+    position: {sX:0, sY:0},
   }
   shipDock.ships2= {
-    numberOf: ships.ships4,
-    position: {sX:0, sY:0}
+    name:"ships2",
+    numberOf: ships.ships2,
+    size:2,
+    position: {sX:0, sY:0},
   }
   shipDock.ships3= {
-    numberOf: ships.ships4,
-    position: {sX:0, sY:0}
+    name:"ships3",
+    numberOf: ships.ships3,
+    size:3,
+    position: {sX:0, sY:0},
   }
   shipDock.ships4= {
+    name: "ships4",
     numberOf: ships.ships4,
-    position: {sX:0, sY:0}
+    size:4,
+    position: {sX:0, sY:0},
   }
    return shipDock
 }
 
 
-function drawShipDockd(Player){
+function drawShipDock(Player){
       // ctx.beginPath();
       // ctx.rect(Player.shipDockPosition.x , Player.shipDockPosition.y , battlSize , battlSize);
       // ctx.strokeStyle = "rgba(6, 25, 247, 1)";
@@ -190,7 +379,7 @@ function drawShipDockd(Player){
       Player.shipDock.ships4.position.sX = ships4PositionX;
       Player.shipDock.ships4.position.sY = ships4PositionY;
     
-      
+      ctx.beginPath();
       ctx.rect( ships1PositionX, ships1PositionY , battlCellSize , battlCellSize);
       ctx.stroke();
       ctx.beginPath();
@@ -202,7 +391,7 @@ function drawShipDockd(Player){
       ctx.beginPath();
       ctx.rect( ships4PositionX, ships4PositionY , battlCellSize*4 , battlCellSize);
       ctx.stroke();
-      ctx.font = `${fontSize} serif`;
+ 
       ctx.fillStyle = "rgba(6, 25, 247, 1)";
       ctx.fillText(" - " + Player.shipDock.ships1.numberOf + " шт.", Player.shipDockPosition.x+battlCellSize*6.9 , Player.shipDockPosition.y+battlCellSize*1.8 )
       ctx.fillText(" - " + Player.shipDock.ships2.numberOf + " шт.", Player.shipDockPosition.x+battlCellSize*6.9 , Player.shipDockPosition.y+battlCellSize*3.8 )
@@ -223,17 +412,51 @@ const Player2 = {
   shipDockPosition: shipDockPosition2,
 }
 
-function drawPreparationScreen(){
-drawBattleground(Player1);
-drawBattleground(Player2);
-drawShipDockd(Player1);
-drawShipDockd(Player2);
+
+
+
+
+function drawPreparationScreen(obj){
+  const { update, clear, render} = obj;
+  requestAnimationFrame(tick);
+function tick () { 
+  requestAnimationFrame(tick);
+  update()
+  clear()
+  render()
 }
 
-drawPreparationScreen()
 
+}
+
+drawPreparationScreen({
+  update(){
+    takeObj (Player1)
+
+    pointerPreviouslyClick()
+  },
+  clear(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height )
+    ctx.fillStyle = pattern;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  },
+  render(){
+    drawBattleground(Player1);
+    drawBattleground(Player2);
+    drawShipDock(Player1);
+    drawShipDock(Player2);
+    dragObj()
+    
+  }
+})
 
 
 // console.log(Player1)
  console.log(Player2)
 // setInterval(draw, 10);
+
+
+
+
+
+ 
