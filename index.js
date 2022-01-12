@@ -5,10 +5,13 @@ let ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+
+
+
 // window.addEventListener('resize', function(){
 //   canvasPosition = canvas.getBoundingClientRect();
-//   pointer.x = canvas.width/2;
-//   pointer.y = canvas.height/2;
+//   mouse.x = canvas.width/2;
+//   mouse.y = canvas.height/2;
 // });
 
 
@@ -73,8 +76,8 @@ ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 
 
-// Pointer
-const pointer = 
+// mouse
+const mouse = 
 { x:canvas.width/2,
   y:canvas.height/2,
   left:false,
@@ -88,106 +91,100 @@ const pointer =
 
 
 
-// canvas.addEventListener("pointerenter", enterHandler);
-// canvas.addEventListener("pointerleave", leaveHandler);
+// canvas.addEventListener("mouseenter", enterHandler);
+// canvas.addEventListener("mouseleave", leaveHandler);
 
 // function enterHandler(event) {
-//   pointer.over = true;
+//   mouse.over = true;
 // }
 
 // function leaveHandler(event) {
-//   pointer.over = false;
+//   mouse.over = false;
 // }
 
 
 
 
-canvas.addEventListener("pointermove", moveHandler);
-canvas.addEventListener("pointerdown", downHandler);
-canvas.addEventListener("pointerup", upHandler);
-document.addEventListener('keydown', function(){
-  pointer.takeObjectHorizontal = !pointer.takeObjectHorizontal;
+canvas.addEventListener("mousemove", moveHandler);
+canvas.addEventListener("mousedown", downHandler);
+canvas.addEventListener("mouseup", upHandler);
 
-});
-document.addEventListener('contextmenu', function(){
-  pointer.takeObjectHorizontal = !pointer.takeObjectHorizontal;
-});
 
 
 
 function moveHandler(event){
-  pointer.x = event.clientX-canvasPosition.left;
-  pointer.y = event.clientY-canvasPosition.top;
+  mouse.x = event.clientX-canvasPosition.left;
+  mouse.y = event.clientY-canvasPosition.top;
 }
 
 function downHandler(event){
   if (event.button === 0) {
-    pointer.left = true;
+    mouse.left = true;
   } 
   if (event.button === 2) {
-    pointer.right = true;
+    mouse.right = true;
   }
 }
 
 function upHandler(event){
   if (event.button === 0) {
-    pointer.left = false;
+    mouse.left = false;
   } 
   if (event.button === 2) {
-    pointer.right = false;
+    mouse.right = false;
   }
   
 }
 
-function pointerPreviouslyClick() {
-  pointer.pLeft = pointer.left;
-  pointer.pRight = pointer.right;
+function mousePreviouslyClick() {
+  mouse.pLeft = mouse.left;
+  mouse.pRight = mouse.right;
 }
 
 
 // Drag'n'Drop
 function takeObj (Player){ 
   //Take Obj on ship dock
-  if (pointer.left && !pointer.pLeft){
+  if (mouse.left && !mouse.pLeft){
   let {shipDock} = Player;
   let shipDockKey = Object.keys(shipDock)
   for (i = 0; i<shipDockKey.length; i++){
-      if ( (shipDock[shipDockKey[i]].position.sX <= pointer.x) 
-            && (shipDock[shipDockKey[i]].position.sX + battlCellSize*(i+1) >= pointer.x)
-            && (shipDock[shipDockKey[i]].position.sY <= pointer.y)
-            && (shipDock[shipDockKey[i]].position.sY + battlCellSize*(i+1) >= pointer.y)){
-                pointer.takeObject=shipDock[shipDockKey[i]];
-                pointer.takeObjectHorizontal = true;
+      if ( (shipDock[shipDockKey[i]].position.sX <= mouse.x) 
+            && (shipDock[shipDockKey[i]].position.sX + battlCellSize*(i+1) >= mouse.x)
+            && (shipDock[shipDockKey[i]].position.sY <= mouse.y)
+            && (shipDock[shipDockKey[i]].position.sY + battlCellSize*(i+1) >= mouse.y)){
+                mouse.takeObject=shipDock[shipDockKey[i]];
+                mouse.takeObjectHorizontal = true;
         }
         
       }
-      console.log(pointer.takeObject)  
-      console.log(pointer.takeObjectHorizontal)  
+      console.log(mouse.takeObject)  
+      console.log(mouse.takeObjectHorizontal)  
     }
-    // if (pointer.right && !pointer.pRight){
-    //   pointer.takeObjectHorizontal = !pointer.takeObjectHorizontal
-    //   console.log(pointer.takeObjectHorizontal)  
-    // }
-    if (!pointer.left && !pointer.pLeft){
-    pointer.takeObject={}
+    if (mouse.right && !mouse.pRight){
+      mouse.takeObjectHorizontal = !mouse.takeObjectHorizontal
+      console.log(mouse.takeObjectHorizontal)  
+    }
+    if (!mouse.left && !mouse.pLeft){
+    mouse.takeObject={}
     }
 }
 
   function dragObj (){
-  if (Object.keys(pointer.takeObject).length != 0){
+  if (Object.keys(mouse.takeObject).length != 0){
     ctx.beginPath();
     ctx.strokeStyle = "rgba(40, 46, 250, 1)";
     ctx.lineWidth = 4; 
-    if (pointer.takeObjectHorizontal){
-      ctx.rect(pointer.x-battlCellSize*pointer.takeObject.size/2, 
-      pointer.y-battlCellSize/2, 
-      battlCellSize*pointer.takeObject.size, 
+    if (mouse.takeObjectHorizontal){
+      ctx.rect(mouse.x-battlCellSize*mouse.takeObject.size/2, 
+      mouse.y-battlCellSize/2, 
+      battlCellSize*mouse.takeObject.size, 
       battlCellSize);}
     else {
-      ctx.rect(pointer.x-battlCellSize/2, 
-      pointer.y-battlCellSize*pointer.takeObject.size/2, 
+      ctx.rect(mouse.x-battlCellSize/2, 
+      mouse.y-battlCellSize*mouse.takeObject.size/2, 
       battlCellSize, 
-      battlCellSize*pointer.takeObject.size);
+      battlCellSize*mouse.takeObject.size);
     }  
     
     ctx.stroke(); 
@@ -210,10 +207,10 @@ function takeObj (Player){
 //             && (shipDock[shipDockKey[i]].position.sX + battlCellSize*(i+1) >= mX)
 //             && (shipDock[shipDockKey[i]].position.sY <= mY)
 //             && (shipDock[shipDockKey[i]].position.sY + battlCellSize*(i+1) >= mY)){
-//                 pointer.takeObject=shipDock[shipDockKey[i]]
+//                 mouse.takeObject=shipDock[shipDockKey[i]]
 //         }
 //       } 
-//       console.log(pointer.takeObject)  
+//       console.log(mouse.takeObject)  
 //  }
 
 
@@ -232,18 +229,18 @@ function takeObj (Player){
 //             && (shipDock[shipDockKey[i]].position.sX + battlCellSize*(i+1) >= mX)
 //             && (shipDock[shipDockKey[i]].position.sY <= mY)
 //             && (shipDock[shipDockKey[i]].position.sY + battlCellSize*(i+1) >= mY)){
-//                 pointer.takeObject=shipDock[shipDockKey[i]]
+//                 mouse.takeObject=shipDock[shipDockKey[i]]
 //         }
 //       }
-//   console.log(pointer.takeObject)  
+//   console.log(mouse.takeObject)  
 //  }
 
 
 //  function moveObjHandler(event){
-//   if (Object.keys(pointer.takeObject).length != 0){
-//     pointer.x = event.clientX-canvasPosition.left;
-//     pointer.y = event.clientY-canvasPosition.top;
-//     console.log(pointer)
+//   if (Object.keys(mouse.takeObject).length != 0){
+//     mouse.x = event.clientX-canvasPosition.left;
+//     mouse.y = event.clientY-canvasPosition.top;
+//     console.log(mouse)
 //   }
 //  }
 
@@ -433,7 +430,7 @@ drawPreparationScreen({
   update(){
     takeObj (Player1)
 
-    pointerPreviouslyClick()
+    mousePreviouslyClick()
   },
   clear(){
     ctx.clearRect(0, 0, canvas.width, canvas.height )
