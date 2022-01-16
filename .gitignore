@@ -1,0 +1,48 @@
+/node_modules
+/report_*
+/reports/
+/build
+/dist
+/logs
+/.temp
+/.tmp
+
+
+.git
+.vscode
+.log 
+.sass-cache/
+
+#.eslintcache/#
+#.eslintrc#
+#.eslintrc.yaml#
+#.eslintrc.json#
+#.eslintrc.js#
+
+package-lock.json
+prettier.config.js
+
+#---------------------------------------#
+# Linux Ignores                         #
+#---------------------------------------#
+
+# KDE directory preferences
+.directory
+
+
+#---------------------------------------#
+# Windows Ignores                       #
+#---------------------------------------#
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+
+# https://gist.github.com/bsara/35ade5031d120c08adad #
