@@ -220,9 +220,6 @@ function drawGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
   canvas.addEventListener('mousemove', moveHandler);
   canvas.addEventListener('mousedown', downHandler);
   canvas.addEventListener('mouseup', upHandler);
-  canvas.addEventListener('touchmove', moveHandler);
-  canvas.addEventListener('touchstart', downHandler);
-  canvas.addEventListener('touchend', upHandler);
 
   // Drag'n'Drop
   function takeObj(Player) {
