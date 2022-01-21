@@ -50,5 +50,5 @@ body {
   margin: 10px 0;
 }
 .control__button-img {
-  max-width: 48px;
+  display: block;
 }
