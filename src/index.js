@@ -6,6 +6,11 @@ const ctx = canvas.getContext('2d');
 canvas.width = 1600;
 canvas.height = 800;
 
+let canvasPosition = canvas.getBoundingClientRect();
+let allLineWidth = 4;
+let blockArcRadius = 3;
+let strikeArcRadius = 4;
+
 function startPlay(event) {
   event.preventDefault();
   const cellSizeInput = document.getElementById('cellSize');
@@ -29,7 +34,12 @@ function startPlay(event) {
   const { battlCell, battlCellSize } = settings;
 
   const fontSize = `${battlCellSize}px`;
-
+  ctx.font = `${fontSize} 'Caveat'`;
+  if (battlCellSize === 16) {
+    allLineWidth = 2;
+    blockArcRadius = 1;
+    strikeArcRadius = 2;
+  }
   const battlSize = battlCell * battlCellSize;
 
   const battlegroundPosition1 = {
@@ -81,8 +91,16 @@ function startPlay(event) {
     activePlayer: false,
   };
   const pattern = ctx.createPattern(createBackgroundPattern(battlCellSize), 'repeat');
+  function resizeCanvas() {
+    canvas.width = 1600;
+    canvas.height = 800;
+    canvasPosition = canvas.getBoundingClientRect();
+    ctx.font = `${fontSize} 'Caveat'`;
+  }
 
-  paintGame(settings, Player1, Player2, pattern, fontSize, battlSize);
+  window.addEventListener('resize', resizeCanvas, false);
+
+  drawGame(settings, Player1, Player2, pattern, fontSize, battlSize);
 }
 
 function makeShipDock(settings) {
@@ -148,8 +166,7 @@ function createBackgroundPattern(battlCellSize) {
   return patternCanvas;
 }
 
-function paintGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
-  const canvasPosition = canvas.getBoundingClientRect();
+function drawGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
   const { battlCellSize, battlCell, ships } = settings;
 
   function clearCanvas() {
@@ -200,11 +217,12 @@ function paintGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
     mouse.pRight = mouse.right;
   }
 
-  ctx.font = `${fontSize} 'Caveat'`;
-
   canvas.addEventListener('mousemove', moveHandler);
   canvas.addEventListener('mousedown', downHandler);
   canvas.addEventListener('mouseup', upHandler);
+  canvas.addEventListener('touchmove', moveHandler);
+  canvas.addEventListener('touchstart', downHandler);
+  canvas.addEventListener('touchend', upHandler);
 
   // Drag'n'Drop
   function takeObj(Player) {
@@ -319,7 +337,7 @@ function paintGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
     if (Object.keys(mouse.takeObject).length !== 0) {
       ctx.beginPath();
       ctx.strokeStyle = 'rgba(40, 46, 250, 1)';
-      ctx.lineWidth = 4;
+      ctx.lineWidth = `${allLineWidth}`;
       if (mouse.takeObjectHorizontal) {
         if (mouse.takeObject.size >= 1) {
           ctx.rect(
@@ -572,14 +590,14 @@ function paintGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
         if (Player.battleground[y][x].ship) {
           ctx.beginPath();
           ctx.strokeStyle = 'rgba(6, 25, 247, 1)';
-          ctx.lineWidth = 4;
+          ctx.lineWidth = `${allLineWidth}`;
           ctx.rect(cX, cY, battlCellSize, battlCellSize);
           ctx.stroke();
         }
         if (Player.battleground[y][x].block) {
           ctx.beginPath();
           ctx.fillStyle = 'rgba(6, 25, 247, 1)';
-          ctx.arc(cX + battlCellSize / 2, cY + battlCellSize / 2, 3, 0, Math.PI * 2);
+          ctx.arc(cX + battlCellSize / 2, cY + battlCellSize / 2, `${blockArcRadius}`, 0, Math.PI * 2);
           ctx.fill();
         }
       }
@@ -601,7 +619,7 @@ function paintGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
     ctx.beginPath();
     ctx.rect(Player.battlegroundPosition.x, Player.battlegroundPosition.y, battlSize, battlSize);
     ctx.strokeStyle = 'rgba(6, 25, 247, 1)';
-    ctx.lineWidth = 4;
+    ctx.lineWidth = `${allLineWidth}`;
     ctx.stroke();
   }
 
@@ -616,7 +634,7 @@ function paintGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
           if (Player.battleground[y][x].ship) {
             ctx.beginPath();
             ctx.strokeStyle = 'rgba(6, 25, 247, 1)';
-            ctx.lineWidth = 4;
+            ctx.lineWidth = `${allLineWidth}`;
             ctx.rect(cX, cY, battlCellSize, battlCellSize);
             ctx.stroke();
             ctx.beginPath();
@@ -629,8 +647,7 @@ function paintGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
           } else {
             ctx.beginPath();
             ctx.strokeStyle = 'red';
-            ctx.lineWidth = 2;
-            ctx.arc(cX + battlCellSize / 2, cY + battlCellSize / 2, 4, 0, Math.PI * 2);
+            ctx.arc(cX + battlCellSize / 2, cY + battlCellSize / 2, `${strikeArcRadius}`, 0, Math.PI * 2);
             ctx.stroke();
           }
         }
@@ -763,7 +780,7 @@ function paintGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
           ) {
             ctx.beginPath();
             ctx.fillStyle = 'rgba(6, 25, 247, 1)';
-            ctx.arc(cX + battlCellSize / 2, cY + battlCellSize / 2, 3, 0, Math.PI * 2);
+            ctx.arc(cX + battlCellSize / 2, cY + battlCellSize / 2, `${blockArcRadius}`, 0, Math.PI * 2);
             ctx.fill();
           }
         }
@@ -786,13 +803,13 @@ function paintGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
     ctx.beginPath();
     ctx.rect(Player.battlegroundPosition.x, Player.battlegroundPosition.y, battlSize, battlSize);
     ctx.strokeStyle = 'rgba(6, 25, 247, 1)';
-    ctx.lineWidth = 4;
+    ctx.lineWidth = `${allLineWidth}`;
     ctx.stroke();
   }
 
   function drawShipDock(Player) {
     ctx.strokeStyle = 'rgba(6, 25, 247, 1)';
-    ctx.lineWidth = 4;
+    ctx.lineWidth = `${allLineWidth}`;
     ctx.beginPath();
     const ships1X = Player.shipDockPosition.x + battlCellSize * 5;
     const ships1Y = Player.shipDockPosition.y + battlCellSize;
