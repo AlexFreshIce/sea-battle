@@ -2,143 +2,203 @@ const playButton = document.getElementById('playButton');
 playButton.addEventListener('click', startPlay);
 const canvas = document.querySelector('#canvas1');
 const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-canvas.width = 1600;
-canvas.height = 800;
-
-let canvasPosition = canvas.getBoundingClientRect();
-let allLineWidth = 4;
-let blockArcRadius = 3;
-let strikeArcRadius = 4;
+const settings = {
+  canvasPosition: canvas.getBoundingClientRect(),
+  battlCell: 0,
+  battlCellSize: 0,
+  battlSize: 0,
+  ships: {
+    ships1: 0,
+    ships2: 0,
+    ships3: 0,
+    ships4: 0,
+  },
+  shipDockPosition1: {},
+  shipDockPosition2: {},
+  battlegroundPosition1: {},
+  battlegroundPosition2: {},
+  fontSize: '',
+  allLineWidth: 4,
+  blockArcRadius: 3,
+  strikeArcRadius: 4,
+  settingsDone: false,
+};
+// let {
+//   canvasPosition,
+//   battlCell,
+//   battlCellSize,
+//   battlSize,
+//   ships,
+//   shipDockPosition1,
+//   shipDockPosition2,
+//   battlegroundPosition1,
+//   battlegroundPosition2,
+//   fontSize,
+//   allLineWidth,
+//   blockArcRadius,
+//   strikeArcRadius,
+// } = settings;
 
 function startPlay(event) {
   event.preventDefault();
+  document.querySelector('.settings').style.display = 'none';
+
+  //  Apply Settings
+
+  // Input value
   const cellSizeInput = document.getElementById('cellSize');
   const numberOfCellInput = document.getElementById('numberOfCell');
   const ships1Input = document.getElementById('ships1');
   const ships2Input = document.getElementById('ships2');
   const ships3Input = document.getElementById('ships3');
   const ships4Input = document.getElementById('ships4');
-  document.querySelector('.settings').style.display = 'none';
-  const settings = {
-    battlCell: +numberOfCellInput.value,
-    battlCellSize: +cellSizeInput.value,
-    ships: {
-      ships1: +ships1Input.value,
-      ships2: +ships2Input.value,
-      ships3: +ships3Input.value,
-      ships4: +ships4Input.value,
-    },
-    settingsDone: true,
-  };
-  const { battlCell, battlCellSize } = settings;
 
-  const fontSize = `${battlCellSize}px`;
-  ctx.font = `${fontSize} 'Caveat'`;
-  if (battlCellSize === 16) {
-    allLineWidth = 2;
-    blockArcRadius = 1;
-    strikeArcRadius = 2;
+  settings.battlCellSize = +cellSizeInput.value;
+  settings.battlCell = +numberOfCellInput.value;
+  settings.ships.ships1 = +ships1Input.value;
+  settings.ships.ships2 = +ships2Input.value;
+  settings.ships.ships3 = +ships3Input.value;
+  settings.ships.ships4 = +ships4Input.value;
+  settings.settingsDone = true;
+
+  // Calc value
+  settings.battlSize = settings.battlCell * settings.battlCellSize;
+  settings.canvasPosition = canvas.getBoundingClientRect();
+  settings.fontSize = `${settings.battlCellSize}px`;
+
+  if (settings.battlCellSize === 16) {
+    settings.allLineWidth = 2;
+    settings.blockArcRadius = 1;
+    settings.strikeArcRadius = 2;
   }
-  const battlSize = battlCell * battlCellSize;
 
-  const battlegroundPosition1 = {
-    x: canvas.width / 2 - battlSize - battlCellSize * 4,
-    y: battlCellSize * 2,
+  settings.battlegroundPosition1 = {
+    x: canvas.width / 2 - settings.battlSize - settings.battlCellSize * 4,
+    y: settings.battlCellSize * 2,
   };
-  const battlegroundPosition2 = {
-    x: canvas.width / 2 + battlCellSize * 4,
-    y: battlCellSize * 2,
+  settings.battlegroundPosition2 = {
+    x: canvas.width / 2 + settings.battlCellSize * 4,
+    y: settings.battlCellSize * 2,
   };
-  const shipDockPosition1 = {
-    x: canvas.width / 2 - battlSize - battlCellSize * 4,
-    y: battlCellSize * 2 + battlSize + battlCellSize * 2,
+  settings.shipDockPosition1 = {
+    x: canvas.width / 2 - settings.battlSize - settings.battlCellSize * 4,
+    y: settings.battlCellSize * 2 + settings.battlSize + settings.battlCellSize * 2,
   };
-  const shipDockPosition2 = {
-    x: canvas.width / 2 + battlCellSize * 4,
-    y: battlCellSize * 2 + battlSize + battlCellSize * 2,
+  settings.shipDockPosition2 = {
+    x: canvas.width / 2 + settings.battlCellSize * 4,
+    y: settings.battlCellSize * 2 + settings.battlSize + settings.battlCellSize * 2,
   };
+
+  ctx.font = `${settings.fontSize} 'Caveat'`;
+
+  const pattern = ctx.createPattern(createBackgroundPattern(), 'repeat');
+
   const Player1 = {
     name: 'Player 1',
-    battleground: makeBattleground(settings),
+    battleground: makeBattleground(),
     battlegroundShips: {
       ships1: 0,
       ships2: 0,
       ships3: 0,
       ships4: 0,
     },
-    shipDock: makeShipDock(settings),
-    battlegroundPosition: battlegroundPosition1,
-    shipDockPosition: shipDockPosition1,
+    shipDock: makeShipDock(),
+    battlegroundPosition: settings.battlegroundPosition1,
+    shipDockPosition: settings.shipDockPosition1,
     allShipsOnBattleground: false,
     allShipsDead: false,
     activePlayer: true,
   };
   const Player2 = {
     name: 'Player 2',
-    battleground: makeBattleground(settings),
+    battleground: makeBattleground(),
     battlegroundShips: {
       ships1: 0,
       ships2: 0,
       ships3: 0,
       ships4: 0,
     },
-    shipDock: makeShipDock(settings),
-    battlegroundPosition: battlegroundPosition2,
-    shipDockPosition: shipDockPosition2,
+    shipDock: makeShipDock(),
+    battlegroundPosition: settings.battlegroundPosition2,
+    shipDockPosition: settings.shipDockPosition2,
     allShipsOnBattleground: false,
     allShipsDead: false,
     activePlayer: false,
   };
-  const pattern = ctx.createPattern(createBackgroundPattern(battlCellSize), 'repeat');
+
   function resizeCanvas() {
-    canvas.width = 1600;
-    canvas.height = 800;
-    canvasPosition = canvas.getBoundingClientRect();
-    ctx.font = `${fontSize} 'Caveat'`;
+    canvas.width = calcCanvasWidth();
+    canvas.height = calcCanvasHeight();
+    settings.canvasPosition = canvas.getBoundingClientRect();
+    Player1.battlegroundPosition.x = (canvas.width / 2
+    - settings.battlSize - settings.battlCellSize * 4);
+    Player2.battlegroundPosition.x = canvas.width / 2 + settings.battlCellSize * 4;
+    Player1.shipDockPosition.x = (canvas.width / 2
+    - settings.battlSize - settings.battlCellSize * 4);
+    Player2.shipDockPosition.x = canvas.width / 2 + settings.battlCellSize * 4;
+    settings.canvasPosition = canvas.getBoundingClientRect();
+    ctx.font = `${settings.fontSize} 'Caveat'`;
   }
 
   window.addEventListener('resize', resizeCanvas, false);
-
-  drawGame(settings, Player1, Player2, pattern, fontSize, battlSize);
+  resizeCanvas();
+  drawGame(Player1, Player2, pattern);
 }
 
-function makeShipDock(settings) {
-  const { ships } = settings;
+function calcCanvasWidth() {
+  let cWidth = window.innerWidth;
+  while (cWidth % settings.battlCellSize) {
+    cWidth--;
+  }
+  cWidth = (cWidth / settings.battlCellSize) % 2 ? cWidth - settings.battlCellSize : cWidth;
+  return cWidth;
+}
+
+function calcCanvasHeight() {
+  let cHeight = window.innerHeight;
+  while (cHeight % settings.battlCellSize) {
+    cHeight--;
+  }
+  return cHeight;
+}
+
+function makeShipDock() {
   const shipDock = {};
   shipDock.ships1 = {
     name: 'ships1',
-    numberOf: ships.ships1,
+    numberOf: settings.ships.ships1,
     size: 1,
-    position: { sX: 0, sY: 0 },
+    position: { x: 0, y: 0 },
   };
   shipDock.ships2 = {
     name: 'ships2',
-    numberOf: ships.ships2,
+    numberOf: settings.ships.ships2,
     size: 2,
-    position: { sX: 0, sY: 0 },
+    position: { x: 0, y: 0 },
   };
   shipDock.ships3 = {
     name: 'ships3',
-    numberOf: ships.ships3,
+    numberOf: settings.ships.ships3,
     size: 3,
-    position: { sX: 0, sY: 0 },
+    position: { x: 0, y: 0 },
   };
   shipDock.ships4 = {
     name: 'ships4',
-    numberOf: ships.ships4,
+    numberOf: settings.ships.ships4,
     size: 4,
-    position: { sX: 0, sY: 0 },
+    position: { x: 0, y: 0 },
   };
   return shipDock;
 }
 
-function makeBattleground(settings) {
-  const { battlCell } = settings;
+function makeBattleground() {
   const battleground = [];
-  for (let y = 0; y < battlCell; y++) {
+  for (let y = 0; y < settings.battlCell; y++) {
     battleground[y] = [];
-    for (let x = 0; x < battlCell; x++) {
+    for (let x = 0; x < settings.battlCell; x++) {
       battleground[y][x] = {
         cX: 0,
         cY: 0,
@@ -152,11 +212,11 @@ function makeBattleground(settings) {
 }
 
 // Background
-function createBackgroundPattern(battlCellSize) {
+function createBackgroundPattern() {
   const patternCanvas = document.createElement('canvas');
   const patternContext = patternCanvas.getContext('2d');
-  patternCanvas.width = battlCellSize;
-  patternCanvas.height = battlCellSize;
+  patternCanvas.width = settings.battlCellSize;
+  patternCanvas.height = settings.battlCellSize;
   patternContext.beginPath();
   patternContext.rect(0, 0, patternCanvas.width, patternCanvas.height);
   patternContext.strokeStyle = 'rgba(40, 46, 250, 0.05)';
@@ -166,9 +226,7 @@ function createBackgroundPattern(battlCellSize) {
   return patternCanvas;
 }
 
-function drawGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
-  const { battlCellSize, battlCell, ships } = settings;
-
+function drawGame(Player1, Player2, pattern) {
   function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = pattern;
@@ -188,10 +246,10 @@ function drawGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
   };
 
   function moveHandler(event) {
-    mouse.x = Math.round((event.clientX - canvasPosition.left)
-    * (canvas.width / canvasPosition.width) * 1000) / 1000;
-    mouse.y = Math.round((event.clientY - canvasPosition.y)
-    * (canvas.height / canvasPosition.height) * 1000) / 1000;
+    mouse.x = Math.round((event.clientX - settings.canvasPosition.left)
+    * (canvas.width / settings.canvasPosition.width) * 1000) / 1000;
+    mouse.y = Math.round((event.clientY - settings.canvasPosition.y)
+    * (canvas.height / settings.canvasPosition.height) * 1000) / 1000;
   }
 
   function downHandler(event) {
@@ -223,15 +281,16 @@ function drawGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
 
   // Drag'n'Drop
   function takeObj(Player) {
+    const { battlCellSize, battlCell } = settings;
     // Take Obj on ship dock
     if (mouse.left && !mouse.pLeft) {
       const { shipDock } = Player;
       const shipDockKey = Object.keys(shipDock);
       for (let i = 0; i < shipDockKey.length; i++) {
-        if ((shipDock[shipDockKey[i]].position.sX <= mouse.x)
-              && (shipDock[shipDockKey[i]].position.sX + battlCellSize * (i + 1) >= mouse.x)
-              && (shipDock[shipDockKey[i]].position.sY <= mouse.y)
-              && (shipDock[shipDockKey[i]].position.sY + battlCellSize * (i + 1) >= mouse.y)
+        if ((shipDock[shipDockKey[i]].position.x < mouse.x)
+              && (shipDock[shipDockKey[i]].position.x + battlCellSize * (i + 1) > mouse.x)
+              && (shipDock[shipDockKey[i]].position.y < mouse.y)
+              && (shipDock[shipDockKey[i]].position.y + battlCellSize > mouse.y)
               && (shipDock[shipDockKey[i]].numberOf)
         ) {
           mouse.takeObject = shipDock[shipDockKey[i]];
@@ -243,10 +302,10 @@ function drawGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
       let shipHorizontal = true;
       for (let y = 0; y < battlCell; y++) {
         for (let x = 0; x < battlCell; x++) {
-          if ((Player.battleground[y][x].cX <= mouse.x)
-          && (Player.battleground[y][x].cX + battlCellSize >= mouse.x)
-          && (Player.battleground[y][x].cY <= mouse.y)
-          && (Player.battleground[y][x].cY + battlCellSize >= mouse.y)
+          if ((Player.battleground[y][x].cX < mouse.x)
+          && (Player.battleground[y][x].cX + battlCellSize > mouse.x)
+          && (Player.battleground[y][x].cY < mouse.y)
+          && (Player.battleground[y][x].cY + battlCellSize > mouse.y)
           && (Player.battleground[y][x].ship)
           ) {
             Player.battleground[y][x].ship = false;
@@ -331,6 +390,7 @@ function drawGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
   }
 
   function dragObj() {
+    const { battlCellSize, allLineWidth } = settings;
     if (Object.keys(mouse.takeObject).length !== 0) {
       ctx.beginPath();
       ctx.strokeStyle = 'rgba(40, 46, 250, 1)';
@@ -414,13 +474,14 @@ function drawGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
   }
 
   function dropObj(Player) {
+    const { battlCellSize } = settings;
     if (!mouse.left && mouse.pLeft) {
       for (let y = 0; y < settings.battlCell; y++) {
         for (let x = 0; x < settings.battlCell; x++) {
-          if ((Player.battleground[y][x].cX <= mouse.x)
-      && (Player.battleground[y][x].cY <= mouse.y)
-      && (Player.battleground[y][x].cX + battlCellSize >= mouse.x)
-      && (Player.battleground[y][x].cY + battlCellSize >= mouse.y)
+          if ((Player.battleground[y][x].cX < mouse.x)
+      && (Player.battleground[y][x].cY < mouse.y)
+      && (Player.battleground[y][x].cX + battlCellSize > mouse.x)
+      && (Player.battleground[y][x].cY + battlCellSize > mouse.y)
       && (!Player.battleground[y][x].ship)
       && (!Player.battleground[y][x].block)
           ) {
@@ -519,13 +580,14 @@ function drawGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
   }
 
   function checkShips(Player) {
-    Player.shipDock.ships1.numberOf = ships.ships1 - Player.battlegroundShips.ships1;
-    Player.shipDock.ships2.numberOf = ships.ships2 - Player.battlegroundShips.ships2;
-    Player.shipDock.ships3.numberOf = ships.ships3 - Player.battlegroundShips.ships3;
-    Player.shipDock.ships4.numberOf = ships.ships4 - Player.battlegroundShips.ships4;
+    Player.shipDock.ships1.numberOf = settings.ships.ships1 - Player.battlegroundShips.ships1;
+    Player.shipDock.ships2.numberOf = settings.ships.ships2 - Player.battlegroundShips.ships2;
+    Player.shipDock.ships3.numberOf = settings.ships.ships3 - Player.battlegroundShips.ships3;
+    Player.shipDock.ships4.numberOf = settings.ships.ships4 - Player.battlegroundShips.ships4;
   }
 
   function createBlockCellOnPreparation(Player) {
+    const { battlCell } = settings;
     for (let y = 0; y < battlCell; y++) {
       for (let x = 0; x < battlCell; x++) {
         if (Player.battleground[y][x].ship) { continue; }
@@ -545,6 +607,7 @@ function drawGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
   }
 
   function strike(activePlayer, activeBattleground) {
+    const { battlCellSize, battlCell } = settings;
     if (mouse.left && !mouse.pLeft
           && Player1.allShipsOnBattleground
           && Player2.allShipsOnBattleground
@@ -577,6 +640,9 @@ function drawGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
   }
 
   function drawPreparationBattleground(Player) {
+    const {
+      battlCellSize, battlCell, battlSize, allLineWidth, blockArcRadius,
+    } = settings;
     for (let y = 0; y < battlCell; y++) {
       for (let x = 0; x < battlCell; x++) {
         const cX = x * (battlCellSize) + Player.battlegroundPosition.x;
@@ -621,6 +687,9 @@ function drawGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
   }
 
   function drawBattleground(Player) {
+    const {
+      battlCellSize, battlSize, battlCell, allLineWidth, blockArcRadius, strikeArcRadius,
+    } = settings;
     for (let y = 0; y < battlCell; y++) {
       for (let x = 0; x < battlCell; x++) {
         const cX = x * (battlCellSize) + Player.battlegroundPosition.x;
@@ -805,6 +874,7 @@ function drawGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
   }
 
   function drawShipDock(Player) {
+    const { battlCellSize, allLineWidth } = settings;
     ctx.strokeStyle = 'rgba(6, 25, 247, 1)';
     ctx.lineWidth = `${allLineWidth}`;
     ctx.beginPath();
@@ -816,14 +886,14 @@ function drawGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
     const ships3Y = Player.shipDockPosition.y + battlCellSize * 5;
     const ships4X = Player.shipDockPosition.x + battlCellSize * 2;
     const ships4Y = Player.shipDockPosition.y + battlCellSize * 7;
-    Player.shipDock.ships1.position.sX = ships1X;
-    Player.shipDock.ships1.position.sY = ships1Y;
-    Player.shipDock.ships2.position.sX = ships2X;
-    Player.shipDock.ships2.position.sY = ships2Y;
-    Player.shipDock.ships3.position.sX = ships3X;
-    Player.shipDock.ships3.position.sY = ships3Y;
-    Player.shipDock.ships4.position.sX = ships4X;
-    Player.shipDock.ships4.position.sY = ships4Y;
+    Player.shipDock.ships1.position.x = ships1X;
+    Player.shipDock.ships1.position.y = ships1Y;
+    Player.shipDock.ships2.position.x = ships2X;
+    Player.shipDock.ships2.position.y = ships2Y;
+    Player.shipDock.ships3.position.x = ships3X;
+    Player.shipDock.ships3.position.y = ships3Y;
+    Player.shipDock.ships4.position.x = ships4X;
+    Player.shipDock.ships4.position.y = ships4Y;
 
     ctx.beginPath();
     ctx.rect(ships1X, ships1Y, battlCellSize, battlCellSize);
@@ -878,6 +948,7 @@ function drawGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
   }
 
   function completeBattle(Player) {
+    const { battlCell } = settings;
     let allShips = 0;
     let deadShips = 0;
     for (let y = 0; y < battlCell; y++) {
@@ -933,7 +1004,7 @@ function drawGame(settings, Player1, Player2, pattern, fontSize, battlSize) {
     && (Player1.allShipsDead || Player2.allShipsDead)) {
       const text = Player1.allShipsDead ? 'Второй игрок Победил!' : 'Первый игрок Победил!';
       clearCanvas();
-      fontSize = `${settings.battlCellSize * 3}px`;
+      const fontSize = `${settings.battlCellSize * 3}px`;
       ctx.font = `${fontSize} 'Caveat'`;
       ctx.fillStyle = 'rgba(6, 25, 247, 1)';
       ctx.textAlign = 'center';
