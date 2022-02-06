@@ -2,13 +2,13 @@ const playButton = document.getElementById('playButton');
 playButton.addEventListener('click', startPlay);
 const canvas = document.querySelector('#canvas1');
 const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.width = 1600;
+canvas.height = 800;
 
 const settings = {
   canvasPosition: canvas.getBoundingClientRect(),
   battlCell: 0,
-  battlCellSize: 0,
+  battlCellSize: 32,
   battlSize: 0,
   ships: {
     ships1: 0,
@@ -49,14 +49,14 @@ function startPlay(event) {
   //  Apply Settings
 
   // Input value
-  const cellSizeInput = document.getElementById('cellSize');
+  // const cellSizeInput = document.getElementById('cellSize');
   const numberOfCellInput = document.getElementById('numberOfCell');
   const ships1Input = document.getElementById('ships1');
   const ships2Input = document.getElementById('ships2');
   const ships3Input = document.getElementById('ships3');
   const ships4Input = document.getElementById('ships4');
 
-  settings.battlCellSize = +cellSizeInput.value;
+  // settings.battlCellSize = +cellSizeInput.value;
   settings.battlCell = +numberOfCellInput.value;
   settings.ships.ships1 = +ships1Input.value;
   settings.ships.ships2 = +ships2Input.value;
@@ -69,11 +69,11 @@ function startPlay(event) {
   settings.canvasPosition = canvas.getBoundingClientRect();
   settings.fontSize = `${settings.battlCellSize}px`;
 
-  if (settings.battlCellSize === 16) {
-    settings.allLineWidth = 2;
-    settings.blockArcRadius = 1;
-    settings.strikeArcRadius = 2;
-  }
+  // if (settings.battlCellSize === 16) {
+  //   settings.allLineWidth = 2;
+  //   settings.blockArcRadius = 1;
+  //   settings.strikeArcRadius = 2;
+  // }
 
   settings.battlegroundPosition1 = {
     x: canvas.width / 2 - settings.battlSize - settings.battlCellSize * 4,
@@ -145,24 +145,91 @@ function startPlay(event) {
 
   window.addEventListener('resize', resizeCanvas, false);
   resizeCanvas();
+  // FullSizeWindow
+  // window.addEventListener('dblclick', () => {
+  //   if (!document.fullscreenElement) {
+  //     canvas.requestFullscreen();
+  //   } else {
+  //     document.exitFullscreen();
+  //   }
+  // });
   drawGame(Player1, Player2, pattern);
 }
 
 function calcCanvasWidth() {
-  let cWidth = window.innerWidth;
-  while (cWidth % settings.battlCellSize) {
-    cWidth--;
-  }
-  cWidth = (cWidth / settings.battlCellSize) % 2 ? cWidth - settings.battlCellSize : cWidth;
-  return cWidth;
+  // let cWidth = window.innerWidth;
+  // while (cWidth % settings.battlCellSize) {
+  //   cWidth--;
+  // }
+  // cWidth = (cWidth / settings.battlCellSize) % 2 ? cWidth - settings.battlCellSize : cWidth;
+  // return cWidth;
+  let cWidth = 0;
+  cWidth = 256 + (settings.battlCell * settings.battlCellSize * 4);
+  // switch (settings.battlCell) {
+  //   case 10:
+  //   case 11:
+  //   case 12:
+  //     cWidth = 1600;
+  //     break;
+  //   case 13:
+  //   case 14:
+  //   case 15:
+  //   case 16:
+  //   case 17:
+  //   case 18:
+  //   case 19:
+  //   case 20:
+  //   case 21:
+  //   case 22:
+  //   case 23:
+  //   case 24:
+  //   case 25:
+  //   case 26:
+  //   case 27:
+  //   case 28:
+  //   case 29:
+  //     cWidth = 3200;
+  //     break;
+  // }
+  return Math.min(cWidth, 3200);
 }
 
 function calcCanvasHeight() {
-  let cHeight = window.innerHeight;
-  while (cHeight % settings.battlCellSize) {
-    cHeight--;
-  }
-  return cHeight;
+  // let cHeight = window.innerHeight;
+  // while (cHeight % settings.battlCellSize) {
+  //   cHeight--;
+  // }
+  // return cHeight;
+  let cHeight = 0;
+  cHeight = 256 + (settings.battlCell * settings.battlCellSize * 2);
+
+  // switch (settings.battlCell) {
+  //   case 10:
+  //   case 11:
+  //   case 12:
+  //     cHeight = 800;
+  //     break;
+  //   case 13:
+  //   case 14:
+  //   case 15:
+  //   case 16:
+  //   case 17:
+  //   case 18:
+  //   case 19:
+  //   case 20:
+  //   case 21:
+  //   case 22:
+  //   case 23:
+  //   case 24:
+  //   case 25:
+  //   case 26:
+  //   case 27:
+  //   case 28:
+  //   case 29:
+  //     cHeight = 1600;
+  //     break;
+  // }
+  return Math.min(cHeight, 1600);
 }
 
 function makeShipDock() {
