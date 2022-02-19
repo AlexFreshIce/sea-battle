@@ -32,7 +32,7 @@ const settings = {
 function startPlay(event) {
   event.preventDefault();
   document.querySelector('.settings').style.display = 'none';
-
+  document.body.style.backgroundColor = '#000';
   //  Apply Settings
   // Input value
 
