@@ -4,7 +4,9 @@ const canvas = document.querySelector('#canvas1');
 const ctx = canvas.getContext('2d');
 canvas.width = 1600;
 canvas.height = 800;
-
+canvas.ondragstart = function () {
+  return false;
+};
 const settings = {
   canvasPosition: canvas.getBoundingClientRect(),
   battlCell: 0,
@@ -237,6 +239,7 @@ function drawGame(Player1, Player2, pattern) {
   };
 
   function moveHandler(event) {
+    event.preventDefault();
     mouse.x = Math.round((event.clientX - settings.canvasPosition.left)
     * (canvas.width / settings.canvasPosition.width) * 1000) / 1000;
     mouse.y = Math.round((event.clientY - settings.canvasPosition.y)
@@ -244,6 +247,7 @@ function drawGame(Player1, Player2, pattern) {
   }
 
   function downHandler(event) {
+    event.preventDefault();
     if (event.button === 0
       || (event.pointerType === 'touch' && event.isPrimary)) {
       mouse.x = Math.round((event.clientX - settings.canvasPosition.left)
@@ -259,10 +263,13 @@ function drawGame(Player1, Player2, pattern) {
   }
 
   function upHandler(event) {
-    if (event.button === 0) {
+    event.preventDefault();
+    if (event.button === 0
+      || (event.pointerType === 'touch' && event.isPrimary)) {
       mouse.left = false;
     }
-    if (event.button === 2) {
+    if (event.button === 2
+      || (event.pointerType === 'touch' && !event.isPrimary)) {
       mouse.right = false;
     }
   }
