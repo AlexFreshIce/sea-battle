@@ -236,7 +236,6 @@ function drawGame(Player1, Player2, pattern) {
     pRight: false,
     takeObject: {},
     takeObjectHorizontal: true,
-    primaryPointerId: 0,
   };
 
   function moveHandler(event) {
@@ -249,28 +248,22 @@ function drawGame(Player1, Player2, pattern) {
 
   function downHandler(event) {
     event.preventDefault();
-    if (event.button === 0
-      || (event.pointerType === 'touch' && event.isPrimary)) {
-      mouse.primaryPointerId = event.pointerId;
+    if (event.isPrimary) {
       mouse.x = Math.round((event.clientX - settings.canvasPosition.left)
         * (canvas.width / settings.canvasPosition.width) * 1000) / 1000;
       mouse.y = Math.round((event.clientY - settings.canvasPosition.y)
         * (canvas.height / settings.canvasPosition.height) * 1000) / 1000;
       mouse.left = true;
-    }
-    if (event.button === 2 || mouse.primaryPointerId) {
+    } else {
       mouse.right = true;
     }
   }
 
   function upHandler(event) {
     event.preventDefault();
-    if (event.button === 0
-      || (event.pointerType === 'touch' && event.isPrimary)) {
-      mouse.primaryPointerId = 0;
+    if (event.isPrimary) {
       mouse.left = false;
-    }
-    if (event.button === 2 || mouse.primaryPointerId) {
+    } else {
       mouse.right = false;
     }
   }
