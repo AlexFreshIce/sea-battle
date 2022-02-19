@@ -14,7 +14,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  touch-action: none;
+  touch-action: pinch-zoom;
 }
 
 #canvas1 {

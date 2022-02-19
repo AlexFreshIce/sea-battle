@@ -255,7 +255,7 @@ function drawGame(Player1, Player2, pattern) {
         * (canvas.height / settings.canvasPosition.height) * 1000) / 1000;
       mouse.left = true;
     } else {
-      mouse.takeObjectHorizontal = !mouse.takeObjectHorizontal;
+      mouse.right = true;
     }
   }
 
@@ -263,6 +263,8 @@ function drawGame(Player1, Player2, pattern) {
     event.preventDefault();
     if (event.isPrimary) {
       mouse.left = false;
+    } else {
+      mouse.right = false;
     }
   }
 
