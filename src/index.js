@@ -255,7 +255,7 @@ function drawGame(Player1, Player2, pattern) {
         * (canvas.height / settings.canvasPosition.height) * 1000) / 1000;
       mouse.left = true;
     } else {
-      mouse.right = true;
+      mouse.takeObjectHorizontal = !mouse.takeObjectHorizontal;
     }
   }
 
@@ -263,9 +263,12 @@ function drawGame(Player1, Player2, pattern) {
     event.preventDefault();
     if (event.isPrimary) {
       mouse.left = false;
-    } else {
-      mouse.right = false;
     }
+  }
+
+  function rightClickHandler(event) {
+    event.preventDefault();
+    mouse.takeObjectHorizontal = !mouse.takeObjectHorizontal;
   }
 
   function mousePreviouslyClick() {
@@ -276,6 +279,7 @@ function drawGame(Player1, Player2, pattern) {
   canvas.addEventListener('pointermove', moveHandler);
   canvas.addEventListener('pointerdown', downHandler);
   canvas.addEventListener('pointerup', upHandler);
+  canvas.addEventListener('contextmenu', rightClickHandler);
 
   // Drag'n'Drop
   function takeObj(Player) {
