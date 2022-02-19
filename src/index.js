@@ -317,14 +317,19 @@ function drawGame(Player1, Player2, pattern) {
     * (canvas.width / settings.canvasPosition.width) * 1000) / 1000;
     mouse.y = Math.round((event.clientY - settings.canvasPosition.y)
     * (canvas.height / settings.canvasPosition.height) * 1000) / 1000;
+    console.log('move', event);
   }
 
   function downHandler(event) {
-    if (event.button === 0) {
+    if (event.button === 0
+      || (event.pointerType === 'touch' && !event.isPrimary)) {
       mouse.left = true;
+      console.log('left', event);
     }
-    if (event.button === 2) {
+    if (event.button === 2
+      || (event.pointerType === 'touch' && !event.isPrimary)) {
       mouse.right = true;
+      console.log('right', event);
     }
   }
 
@@ -342,9 +347,9 @@ function drawGame(Player1, Player2, pattern) {
     mouse.pRight = mouse.right;
   }
 
-  canvas.addEventListener('mousemove', moveHandler);
-  canvas.addEventListener('mousedown', downHandler);
-  canvas.addEventListener('mouseup', upHandler);
+  canvas.addEventListener('pointermove', moveHandler);
+  canvas.addEventListener('pointerdown', downHandler);
+  canvas.addEventListener('pointerup', upHandler);
 
   // Drag'n'Drop
   function takeObj(Player) {
