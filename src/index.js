@@ -245,7 +245,7 @@ function drawGame(Player1, Player2, pattern) {
 
   function downHandler(event) {
     if (event.button === 0
-      || (event.pointerType === 'touch' && !event.isPrimary)) {
+      || (event.pointerType === 'touch' && event.isPrimary)) {
       mouse.x = Math.round((event.clientX - settings.canvasPosition.left)
         * (canvas.width / settings.canvasPosition.width) * 1000) / 1000;
       mouse.y = Math.round((event.clientY - settings.canvasPosition.y)
