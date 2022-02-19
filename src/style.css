@@ -25,8 +25,14 @@ body {
 }
 
 .settings {
+  background-color: #fff;
   position: absolute;
   max-width: 320px;
+  padding: 8px;
+}
+.title {
+  text-align: center;
+  padding-bottom: 8px;
 }
 
 .settings__form {
