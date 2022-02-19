@@ -26,30 +26,14 @@ const settings = {
   strikeArcRadius: 4,
   settingsDone: false,
 };
-// let {
-//   canvasPosition,
-//   battlCell,
-//   battlCellSize,
-//   battlSize,
-//   ships,
-//   shipDockPosition1,
-//   shipDockPosition2,
-//   battlegroundPosition1,
-//   battlegroundPosition2,
-//   fontSize,
-//   allLineWidth,
-//   blockArcRadius,
-//   strikeArcRadius,
-// } = settings;
 
 function startPlay(event) {
   event.preventDefault();
   document.querySelector('.settings').style.display = 'none';
 
   //  Apply Settings
-
   // Input value
-  // const cellSizeInput = document.getElementById('cellSize');
+
   const numberOfCellInput = document.getElementById('numberOfCell');
   const ships1Input = document.getElementById('ships1');
   const ships2Input = document.getElementById('ships2');
@@ -165,32 +149,6 @@ function calcCanvasWidth() {
   // return cWidth;
   let cWidth = 0;
   cWidth = 256 + (settings.battlCell * settings.battlCellSize * 4);
-  // switch (settings.battlCell) {
-  //   case 10:
-  //   case 11:
-  //   case 12:
-  //     cWidth = 1600;
-  //     break;
-  //   case 13:
-  //   case 14:
-  //   case 15:
-  //   case 16:
-  //   case 17:
-  //   case 18:
-  //   case 19:
-  //   case 20:
-  //   case 21:
-  //   case 22:
-  //   case 23:
-  //   case 24:
-  //   case 25:
-  //   case 26:
-  //   case 27:
-  //   case 28:
-  //   case 29:
-  //     cWidth = 3200;
-  //     break;
-  // }
   return Math.min(cWidth, 3200);
 }
 
@@ -202,33 +160,6 @@ function calcCanvasHeight() {
   // return cHeight;
   let cHeight = 0;
   cHeight = 256 + (settings.battlCell * settings.battlCellSize * 2);
-
-  // switch (settings.battlCell) {
-  //   case 10:
-  //   case 11:
-  //   case 12:
-  //     cHeight = 800;
-  //     break;
-  //   case 13:
-  //   case 14:
-  //   case 15:
-  //   case 16:
-  //   case 17:
-  //   case 18:
-  //   case 19:
-  //   case 20:
-  //   case 21:
-  //   case 22:
-  //   case 23:
-  //   case 24:
-  //   case 25:
-  //   case 26:
-  //   case 27:
-  //   case 28:
-  //   case 29:
-  //     cHeight = 1600;
-  //     break;
-  // }
   return Math.min(cHeight, 1600);
 }
 
@@ -317,19 +248,20 @@ function drawGame(Player1, Player2, pattern) {
     * (canvas.width / settings.canvasPosition.width) * 1000) / 1000;
     mouse.y = Math.round((event.clientY - settings.canvasPosition.y)
     * (canvas.height / settings.canvasPosition.height) * 1000) / 1000;
-    console.log('move', event);
   }
 
   function downHandler(event) {
+    mouse.x = Math.round((event.clientX - settings.canvasPosition.left)
+    * (canvas.width / settings.canvasPosition.width) * 1000) / 1000;
+    mouse.y = Math.round((event.clientY - settings.canvasPosition.y)
+    * (canvas.height / settings.canvasPosition.height) * 1000) / 1000;
     if (event.button === 0
       || (event.pointerType === 'touch' && !event.isPrimary)) {
       mouse.left = true;
-      console.log('left', event);
     }
     if (event.button === 2
       || (event.pointerType === 'touch' && !event.isPrimary)) {
       mouse.right = true;
-      console.log('right', event);
     }
   }
 
