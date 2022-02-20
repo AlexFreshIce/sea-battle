@@ -33,9 +33,9 @@ function startPlay(event) {
   event.preventDefault();
   document.querySelector('.settings').style.display = 'none';
   document.body.style.backgroundColor = '#000';
+
   //  Apply Settings
   // Input value
-
   const numberOfCellInput = document.getElementById('numberOfCell');
   const ships1Input = document.getElementById('ships1');
   const ships2Input = document.getElementById('ships2');
@@ -724,36 +724,45 @@ function drawGame(Player1, Player2, pattern) {
           }
         }
         if (Player.battleground[y][x].block) {
-          if ((Player.battleground?.[y - 1]?.[x - 1]?.ship
+          if (
+            (Player.battleground?.[y - 1]?.[x - 1]?.ship
               && Player.battleground?.[y - 1]?.[x - 1]?.strike)
-              || (Player.battleground?.[y - 1]?.[x + 1]?.ship
+
+            || (Player.battleground?.[y - 1]?.[x + 1]?.ship
               && Player.battleground?.[y - 1]?.[x + 1]?.strike)
-              || (Player.battleground?.[y + 1]?.[x + 1]?.ship
+
+            || (Player.battleground?.[y + 1]?.[x + 1]?.ship
               && Player.battleground?.[y + 1]?.[x + 1]?.strike)
-              || (Player.battleground?.[y + 1]?.[x - 1]?.ship
+
+            || (Player.battleground?.[y + 1]?.[x - 1]?.ship
               && Player.battleground?.[y + 1]?.[x - 1]?.strike)
 
-              || (Player.battleground?.[y]?.[x - 1]?.ship
+            || (Player.battleground?.[y]?.[x - 1]?.ship
               && Player.battleground?.[y]?.[x - 1]?.strike
-              && Player.battleground?.[y]?.[x - 2]?.block
-              && Player.battleground?.[y - 1]?.[x - 1]?.block
-              && Player.battleground?.[y + 1]?.[x - 1]?.block)
+              && (Player.battleground?.[y]?.[x - 2]?.block
+                || !Player.battleground?.[y]?.[x - 2])
+              && (Player.battleground?.[y - 1]?.[x - 1]?.block
+                || !Player.battleground?.[y - 1]?.[x - 1])
+              && (Player.battleground?.[y + 1]?.[x - 1]?.block
+                || !Player.battleground?.[y + 1]?.[x - 1]))
 
-              || (Player.battleground?.[y]?.[x - 1]?.ship
+            || (Player.battleground?.[y]?.[x - 1]?.ship
               && Player.battleground?.[y]?.[x - 1]?.strike
               && Player.battleground?.[y]?.[x - 2]?.ship
               && Player.battleground?.[y]?.[x - 2]?.strike
-              && Player.battleground?.[y]?.[x - 3]?.block)
+              && (Player.battleground?.[y]?.[x - 3]?.block
+                || !Player.battleground?.[y]?.[x - 3]))
 
-              || (Player.battleground?.[y]?.[x - 1]?.ship
+            || (Player.battleground?.[y]?.[x - 1]?.ship
               && Player.battleground?.[y]?.[x - 1]?.strike
               && Player.battleground?.[y]?.[x - 2]?.ship
               && Player.battleground?.[y]?.[x - 2]?.strike
               && Player.battleground?.[y]?.[x - 3]?.ship
               && Player.battleground?.[y]?.[x - 3]?.strike
-              && Player.battleground?.[y]?.[x - 4]?.block)
+              && (Player.battleground?.[y]?.[x - 4]?.block
+                || !Player.battleground?.[y]?.[x - 4]))
 
-              || (Player.battleground?.[y]?.[x - 1]?.ship
+            || (Player.battleground?.[y]?.[x - 1]?.ship
               && Player.battleground?.[y]?.[x - 1]?.strike
               && Player.battleground?.[y]?.[x - 2]?.ship
               && Player.battleground?.[y]?.[x - 2]?.strike
@@ -762,27 +771,32 @@ function drawGame(Player1, Player2, pattern) {
               && Player.battleground?.[y]?.[x - 4]?.ship
               && Player.battleground?.[y]?.[x - 4]?.strike)
 
-              || (Player.battleground?.[y]?.[x + 1]?.ship
+            || (Player.battleground?.[y]?.[x + 1]?.ship
               && Player.battleground?.[y]?.[x + 1]?.strike
-              && Player.battleground?.[y]?.[x + 2]?.block
-              && Player.battleground?.[y - 1]?.[x + 1]?.block
-              && Player.battleground?.[y + 1]?.[x + 1]?.block)
+              && (Player.battleground?.[y]?.[x + 2]?.block
+                || !Player.battleground?.[y]?.[x + 2])
+              && (Player.battleground?.[y - 1]?.[x + 1]?.block
+                || !Player.battleground?.[y - 1]?.[x + 1])
+              && (Player.battleground?.[y + 1]?.[x + 1]?.block
+                || !Player.battleground?.[y + 1]?.[x + 1]))
 
-              || (Player.battleground?.[y]?.[x + 1]?.ship
+            || (Player.battleground?.[y]?.[x + 1]?.ship
               && Player.battleground?.[y]?.[x + 1]?.strike
               && Player.battleground?.[y]?.[x + 2]?.ship
               && Player.battleground?.[y]?.[x + 2]?.strike
-              && Player.battleground?.[y]?.[x + 3]?.block)
+              && (Player.battleground?.[y]?.[x + 3]?.block
+                || !Player.battleground?.[y]?.[x + 3]))
 
-              || (Player.battleground?.[y]?.[x + 1]?.ship
+            || (Player.battleground?.[y]?.[x + 1]?.ship
               && Player.battleground?.[y]?.[x + 1]?.strike
               && Player.battleground?.[y]?.[x + 2]?.ship
               && Player.battleground?.[y]?.[x + 2]?.strike
               && Player.battleground?.[y]?.[x + 3]?.ship
               && Player.battleground?.[y]?.[x + 3]?.strike
-              && Player.battleground?.[y]?.[x + 4]?.block)
+              && (Player.battleground?.[y]?.[x + 4]?.block
+                || !Player.battleground?.[y]?.[x + 4]))
 
-              || (Player.battleground?.[y]?.[x + 1]?.ship
+            || (Player.battleground?.[y]?.[x + 1]?.ship
               && Player.battleground?.[y]?.[x + 1]?.strike
               && Player.battleground?.[y]?.[x + 2]?.ship
               && Player.battleground?.[y]?.[x + 2]?.strike
@@ -791,27 +805,32 @@ function drawGame(Player1, Player2, pattern) {
               && Player.battleground?.[y]?.[x + 4]?.ship
               && Player.battleground?.[y]?.[x + 4]?.strike)
 
-              || (Player.battleground?.[y - 1]?.[x]?.ship
+            || (Player.battleground?.[y - 1]?.[x]?.ship
               && Player.battleground?.[y - 1]?.[x]?.strike
-              && Player.battleground?.[y - 2]?.[x]?.block
-              && Player.battleground?.[y - 1]?.[x - 1]?.block
-              && Player.battleground?.[y - 1]?.[x + 1]?.block)
+              && (Player.battleground?.[y - 2]?.[x]?.block
+                || !Player.battleground?.[y - 2]?.[x])
+              && (Player.battleground?.[y - 1]?.[x - 1]?.block
+                || !Player.battleground?.[y - 1]?.[x - 1])
+              && (Player.battleground?.[y - 1]?.[x + 1]?.block
+                || !Player.battleground?.[y - 1]?.[x + 1]))
 
-              || (Player.battleground?.[y - 1]?.[x]?.ship
+            || (Player.battleground?.[y - 1]?.[x]?.ship
               && Player.battleground?.[y - 1]?.[x]?.strike
               && Player.battleground?.[y - 2]?.[x]?.ship
               && Player.battleground?.[y - 2]?.[x]?.strike
-              && Player.battleground?.[y - 3]?.[x]?.block)
+              && (Player.battleground?.[y - 3]?.[x]?.block
+                || !Player.battleground?.[y - 3]?.[x]))
 
-              || (Player.battleground?.[y - 1]?.[x]?.ship
+            || (Player.battleground?.[y - 1]?.[x]?.ship
               && Player.battleground?.[y - 1]?.[x]?.strike
               && Player.battleground?.[y - 2]?.[x]?.ship
               && Player.battleground?.[y - 2]?.[x]?.strike
               && Player.battleground?.[y - 3]?.[x]?.ship
               && Player.battleground?.[y - 3]?.[x]?.strike
-              && Player.battleground?.[y - 4]?.[x]?.block)
+              && (Player.battleground?.[y - 4]?.[x]?.block
+                || !Player.battleground?.[y - 4]?.[x]))
 
-              || (Player.battleground?.[y - 1]?.[x]?.ship
+            || (Player.battleground?.[y - 1]?.[x]?.ship
               && Player.battleground?.[y - 1]?.[x]?.strike
               && Player.battleground?.[y - 2]?.[x]?.ship
               && Player.battleground?.[y - 2]?.[x]?.strike
@@ -820,27 +839,32 @@ function drawGame(Player1, Player2, pattern) {
               && Player.battleground?.[y - 4]?.[x]?.ship
               && Player.battleground?.[y - 4]?.[x]?.strike)
 
-              || (Player.battleground?.[y + 1]?.[x]?.ship
+            || (Player.battleground?.[y + 1]?.[x]?.ship
               && Player.battleground?.[y + 1]?.[x]?.strike
-              && Player.battleground?.[y + 2]?.[x]?.block
-              && Player.battleground?.[y + 1]?.[x - 1]?.block
-              && Player.battleground?.[y + 1]?.[x + 1]?.block)
+              && (Player.battleground?.[y + 2]?.[x]?.block
+                || !Player.battleground?.[y + 2]?.[x])
+              && (Player.battleground?.[y + 1]?.[x - 1]?.block
+                || !Player.battleground?.[y + 1]?.[x - 1])
+              && (Player.battleground?.[y + 1]?.[x + 1]?.block
+                || !Player.battleground?.[y + 1]?.[x + 1]))
 
-              || (Player.battleground?.[y + 1]?.[x]?.ship
+            || (Player.battleground?.[y + 1]?.[x]?.ship
               && Player.battleground?.[y + 1]?.[x]?.strike
               && Player.battleground?.[y + 2]?.[x]?.ship
               && Player.battleground?.[y + 2]?.[x]?.strike
-              && Player.battleground?.[y + 3]?.[x]?.block)
+              && (Player.battleground?.[y + 3]?.[x]?.block
+                || !Player.battleground?.[y + 3]?.[x]))
 
-              || (Player.battleground?.[y + 1]?.[x]?.ship
+            || (Player.battleground?.[y + 1]?.[x]?.ship
               && Player.battleground?.[y + 1]?.[x]?.strike
               && Player.battleground?.[y + 2]?.[x]?.ship
               && Player.battleground?.[y + 2]?.[x]?.strike
               && Player.battleground?.[y + 3]?.[x]?.ship
               && Player.battleground?.[y + 3]?.[x]?.strike
-              && Player.battleground?.[y + 4]?.[x]?.block)
+              && (Player.battleground?.[y + 4]?.[x]?.block
+                || !Player.battleground?.[y + 4]?.[x]))
 
-              || (Player.battleground?.[y + 1]?.[x]?.ship
+            || (Player.battleground?.[y + 1]?.[x]?.ship
               && Player.battleground?.[y + 1]?.[x]?.strike
               && Player.battleground?.[y + 2]?.[x]?.ship
               && Player.battleground?.[y + 2]?.[x]?.strike
@@ -848,7 +872,6 @@ function drawGame(Player1, Player2, pattern) {
               && Player.battleground?.[y + 3]?.[x]?.strike
               && Player.battleground?.[y + 4]?.[x]?.ship
               && Player.battleground?.[y + 4]?.[x]?.strike)
-
           ) {
             ctx.beginPath();
             ctx.fillStyle = 'rgba(6, 25, 247, 1)';
