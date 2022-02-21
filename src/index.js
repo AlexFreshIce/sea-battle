@@ -4,9 +4,7 @@ const canvas = document.querySelector('#canvas1');
 const ctx = canvas.getContext('2d');
 canvas.width = 1600;
 canvas.height = 800;
-canvas.ondragstart = function () {
-  return false;
-};
+
 const settings = {
   canvasPosition: canvas.getBoundingClientRect(),
   battlCell: 0,
