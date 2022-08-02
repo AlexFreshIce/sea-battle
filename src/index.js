@@ -53,12 +53,6 @@ function startPlay(event) {
   settings.canvasPosition = canvas.getBoundingClientRect();
   settings.fontSize = `${settings.battlCellSize}px`;
 
-  // if (settings.battlCellSize === 16) {
-  //   settings.allLineWidth = 2;
-  //   settings.blockArcRadius = 1;
-  //   settings.strikeArcRadius = 2;
-  // }
-
   settings.battlegroundPosition1 = {
     x: canvas.width / 2 - settings.battlSize - settings.battlCellSize * 4,
     y: settings.battlCellSize * 2,
@@ -68,11 +62,11 @@ function startPlay(event) {
     y: settings.battlCellSize * 2,
   };
   settings.shipDockPosition1 = {
-    x: canvas.width / 2 - settings.battlSize - settings.battlCellSize * 4,
+    x: canvas.width / 2 - settings.battlSize - settings.battlCellSize * 5,
     y: settings.battlCellSize * 2 + settings.battlSize + settings.battlCellSize * 2,
   };
   settings.shipDockPosition2 = {
-    x: canvas.width / 2 + settings.battlCellSize * 4,
+    x: canvas.width / 2 + settings.battlCellSize * 3,
     y: settings.battlCellSize * 2 + settings.battlSize + settings.battlCellSize * 2,
   };
 
@@ -121,8 +115,8 @@ function startPlay(event) {
     - settings.battlSize - settings.battlCellSize * 4);
     Player2.battlegroundPosition.x = canvas.width / 2 + settings.battlCellSize * 4;
     Player1.shipDockPosition.x = (canvas.width / 2
-    - settings.battlSize - settings.battlCellSize * 4);
-    Player2.shipDockPosition.x = canvas.width / 2 + settings.battlCellSize * 4;
+    - settings.battlSize - settings.battlCellSize * 5);
+    Player2.shipDockPosition.x = canvas.width / 2 + settings.battlCellSize * 3;
     settings.canvasPosition = canvas.getBoundingClientRect();
     ctx.font = `${settings.fontSize} 'Caveat'`;
   }
@@ -134,23 +128,12 @@ function startPlay(event) {
 }
 
 function calcCanvasWidth() {
-  // let cWidth = window.innerWidth;
-  // while (cWidth % settings.battlCellSize) {
-  //   cWidth--;
-  // }
-  // cWidth = (cWidth / settings.battlCellSize) % 2 ? cWidth - settings.battlCellSize : cWidth;
-  // return cWidth;
   let cWidth = 0;
   cWidth = 256 + (settings.battlCell * settings.battlCellSize * 4);
   return Math.min(cWidth, 3200);
 }
 
 function calcCanvasHeight() {
-  // let cHeight = window.innerHeight;
-  // while (cHeight % settings.battlCellSize) {
-  //   cHeight--;
-  // }
-  // return cHeight;
   let cHeight = 0;
   cHeight = 256 + (settings.battlCell * settings.battlCellSize * 2);
   return Math.min(cHeight, 1600);
@@ -210,7 +193,7 @@ function createBackgroundPattern() {
   patternCanvas.height = settings.battlCellSize;
   patternContext.beginPath();
   patternContext.rect(0, 0, patternCanvas.width, patternCanvas.height);
-  patternContext.strokeStyle = 'rgba(40, 46, 250, 0.05)';
+  patternContext.strokeStyle = 'rgba(40, 46, 250, 0.3)';
   patternContext.fillStyle = 'rgba(250, 250, 250, 1)';
   patternContext.fill();
   patternContext.stroke();
@@ -224,7 +207,7 @@ function drawGame(Player1, Player2, pattern) {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
-  // mouse
+  // Mouse
   const mouse = {
     x: canvas.width / 2,
     y: canvas.height / 2,
@@ -943,22 +926,22 @@ function drawGame(Player1, Player2, pattern) {
 
     ctx.fillStyle = 'rgba(6, 25, 247, 1)';
     ctx.fillText(
-      ` - ${Player.shipDock.ships1.numberOf} шт.`,
+      ` -   ${Player.shipDock.ships1.numberOf} шт.`,
       Player.shipDockPosition.x + battlCellSize * 6.9,
       Player.shipDockPosition.y + battlCellSize * 1.8,
     );
     ctx.fillText(
-      ` - ${Player.shipDock.ships2.numberOf} шт.`,
+      ` -   ${Player.shipDock.ships2.numberOf} шт.`,
       Player.shipDockPosition.x + battlCellSize * 6.9,
       Player.shipDockPosition.y + battlCellSize * 3.8,
     );
     ctx.fillText(
-      ` - ${Player.shipDock.ships3.numberOf} шт.`,
+      ` -   ${Player.shipDock.ships3.numberOf} шт.`,
       Player.shipDockPosition.x + battlCellSize * 6.9,
       Player.shipDockPosition.y + battlCellSize * 5.8,
     );
     ctx.fillText(
-      ` - ${Player.shipDock.ships4.numberOf} шт.`,
+      ` -   ${Player.shipDock.ships4.numberOf} шт.`,
       Player.shipDockPosition.x + battlCellSize * 6.9,
       Player.shipDockPosition.y + battlCellSize * 7.8,
     );
