@@ -1,31 +1,13 @@
+/* eslint-disable import/extensions */
+import settings from './settings.js';
+import { mouse, mousePreviouslyClick } from './mouse.js';
+
 const playButton = document.getElementById('playButton');
 playButton.addEventListener('click', startPlay);
 const canvas = document.querySelector('#canvas1');
 const ctx = canvas.getContext('2d');
 canvas.width = 1600;
 canvas.height = 800;
-
-const settings = {
-  canvasPosition: canvas.getBoundingClientRect(),
-  battlCell: 0,
-  battlCellSize: 32,
-  battlSize: 0,
-  ships: {
-    ships1: 0,
-    ships2: 0,
-    ships3: 0,
-    ships4: 0,
-  },
-  shipDockPosition1: {},
-  shipDockPosition2: {},
-  battlegroundPosition1: {},
-  battlegroundPosition2: {},
-  fontSize: '',
-  allLineWidth: 4,
-  blockArcRadius: 3,
-  strikeArcRadius: 4,
-  settingsDone: false,
-};
 
 function startPlay(event) {
   event.preventDefault();
@@ -207,64 +189,64 @@ function drawGame(Player1, Player2, pattern) {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
-  // Mouse
-  const mouse = {
-    x: canvas.width / 2,
-    y: canvas.height / 2,
-    left: false,
-    pLeft: false,
-    right: false,
-    pRight: false,
-    takeObject: {},
-    takeObjectHorizontal: true,
-  };
+  // // Mouse
+  // const mouse = {
+  //   x: canvas.width / 2,
+  //   y: canvas.height / 2,
+  //   left: false,
+  //   pLeft: false,
+  //   right: false,
+  //   pRight: false,
+  //   takeObject: {},
+  //   takeObjectHorizontal: true,
+  // };
 
-  function moveHandler(event) {
-    event.preventDefault();
-    if (event.isPrimary) {
-      mouse.x = Math.round((event.clientX - settings.canvasPosition.left)
-    * (canvas.width / settings.canvasPosition.width) * 1000) / 1000;
-      mouse.y = Math.round((event.clientY - settings.canvasPosition.y)
-    * (canvas.height / settings.canvasPosition.height) * 1000) / 1000;
-    }
-  }
+  // function moveHandler(event) {
+  //   event.preventDefault();
+  //   if (event.isPrimary) {
+  //     mouse.x = Math.round((event.clientX - settings.canvasPosition.left)
+  //   * (canvas.width / settings.canvasPosition.width) * 1000) / 1000;
+  //     mouse.y = Math.round((event.clientY - settings.canvasPosition.y)
+  //   * (canvas.height / settings.canvasPosition.height) * 1000) / 1000;
+  //   }
+  // }
 
-  function downHandler(event) {
-    event.preventDefault();
-    if (event.isPrimary) {
-      mouse.x = Math.round((event.clientX - settings.canvasPosition.left)
-        * (canvas.width / settings.canvasPosition.width) * 1000) / 1000;
-      mouse.y = Math.round((event.clientY - settings.canvasPosition.y)
-        * (canvas.height / settings.canvasPosition.height) * 1000) / 1000;
-      mouse.left = true;
-    } else {
-      mouse.right = true;
-    }
-  }
+  // function downHandler(event) {
+  //   event.preventDefault();
+  //   if (event.isPrimary) {
+  //     mouse.x = Math.round((event.clientX - settings.canvasPosition.left)
+  //       * (canvas.width / settings.canvasPosition.width) * 1000) / 1000;
+  //     mouse.y = Math.round((event.clientY - settings.canvasPosition.y)
+  //       * (canvas.height / settings.canvasPosition.height) * 1000) / 1000;
+  //     mouse.left = true;
+  //   } else {
+  //     mouse.right = true;
+  //   }
+  // }
 
-  function upHandler(event) {
-    event.preventDefault();
-    if (event.isPrimary) {
-      mouse.left = false;
-    } else {
-      mouse.right = false;
-    }
-  }
+  // function upHandler(event) {
+  //   event.preventDefault();
+  //   if (event.isPrimary) {
+  //     mouse.left = false;
+  //   } else {
+  //     mouse.right = false;
+  //   }
+  // }
 
-  function rightClickHandler(event) {
-    event.preventDefault();
-    mouse.takeObjectHorizontal = !mouse.takeObjectHorizontal;
-  }
+  // function rightClickHandler(event) {
+  //   event.preventDefault();
+  //   mouse.takeObjectHorizontal = !mouse.takeObjectHorizontal;
+  // }
 
-  function mousePreviouslyClick() {
-    mouse.pLeft = mouse.left;
-    mouse.pRight = mouse.right;
-  }
+  // function mousePreviouslyClick() {
+  //   mouse.pLeft = mouse.left;
+  //   mouse.pRight = mouse.right;
+  // }
 
-  canvas.addEventListener('pointermove', moveHandler);
-  canvas.addEventListener('pointerdown', downHandler);
-  canvas.addEventListener('pointerup', upHandler);
-  canvas.addEventListener('contextmenu', rightClickHandler);
+  // canvas.addEventListener('pointermove', moveHandler);
+  // canvas.addEventListener('pointerdown', downHandler);
+  // canvas.addEventListener('pointerup', upHandler);
+  // canvas.addEventListener('contextmenu', rightClickHandler);
 
   // Drag'n'Drop
   function takeObj(Player) {
